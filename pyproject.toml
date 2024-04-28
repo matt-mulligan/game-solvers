@@ -1,0 +1,30 @@
+# craetd using best practices @ https://packaging.python.org/en/latest/guides/writing-pyproject-toml/
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "game-solvers"
+description = "CLI application of puzzle game solvers"
+authors = [
+    {name = "Matt Mulligan", email = "matt@mattmulligan.net"}
+]
+maintainers = [
+    {name = "Matt Mulligan", email = "matt@mattmulligan.net"}
+]
+readme = "README.rst"
+license = {file = "LICENSE"}
+dynamic = ["version"]
+dependencies = ["pyapp"]
+requires-python = ">= 3.12"
+
+[project.urls]
+Repository = "https://github.com/matt-mulligan/game-solvers.git"
+Issues = "https://github.com/matt-mulligan/game-solvers/issues"
+Changelog = "https://github.com/matt-mulligan/game-solvers/blob/master/CHANGELOG.rst"
+
+[project.scripts]
+game-solvers = "game_solvers.cli:main"
+
+[tool.setuptools.dynamic]
+version = {attr = "game_solvers.__version__"}
