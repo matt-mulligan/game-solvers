@@ -19,7 +19,7 @@ repos:
         files: ^(src|tests)/.+\.py
 
       - id: mypy
-        name: "MyPy Type Checking"
+        name: "MyPy: Type Checking"
         entry: poetry run mypy
         language: system
         types: [ python ]
