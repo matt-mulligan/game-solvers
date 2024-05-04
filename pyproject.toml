@@ -57,3 +57,23 @@ indent-style = "space"
 skip-magic-trailing-comma = false
 # Like Black, automatically detect the appropriate line ending.
 line-ending = "auto"
+
+# MYPY CONFIGURATION
+
+[tool.mypy]
+python_version = "3.12"
+
+# enforce typing
+check_untyped_defs = true  # mypy to still check methods/funcs without type hints
+disallow_untyped_calls = true  # enforce all calls require type hinting
+disallow_untyped_decorators = true  # enforce all decorators require type hinting
+disallow_untyped_defs = true  # enforce all methods/funcs require type hints
+disallow_incomplete_defs = true  # enforce that all args in a def need typing, not just some
+
+show_error_codes = true  # ensure error codes given in output of mypy
+
+# warnings for developer action
+warn_redundant_casts = true  # warns of unnesssiary casting
+warn_return_any = true  # warns of funcs returning untyped or Any typed returns
+warn_unused_configs = true  # warns of per-module mypy config that doesnt match any module
+warn_unused_ignores = true  # mypy warning if an "ignore" isn't requried anymore
