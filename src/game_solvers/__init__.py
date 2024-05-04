@@ -1,5 +1,1 @@
-"""
-Game Solvers Core Package
-"""
-
-
+"""Game Solvers Core Package."""
