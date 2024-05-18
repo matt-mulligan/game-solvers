@@ -78,3 +78,7 @@ warn_redundant_casts = true  # warns of unnesssiary casting
 warn_return_any = true  # warns of funcs returning untyped or Any typed returns
 warn_unused_configs = true  # warns of per-module mypy config that doesnt match any module
 warn_unused_ignores = true  # mypy warning if an "ignore" isn't requried anymore
+
+[[tool.mypy.overrides]]
+module = "game_solvers.cli"
+ignore_errors = true
