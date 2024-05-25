@@ -1,8 +1,8 @@
-"""Module for Wordle game solver functionality."""
+"""Module for WordleSolver game solver functionality."""
 
 
-class Wordle:
-    """Wordle game solver class."""
+class WordleSolver:
+    """WordleSolver game solver class."""
 
     def __init__(
         self,
@@ -10,7 +10,7 @@ class Wordle:
         yellows: list[tuple[str, list[int]]],
         greys: list[str],
     ):
-        """Initialize the Wordle game solver class."""
+        """Initialize the WordleSolver game solver class."""
         self.greens = greens
         self.yellows = yellows
         self.greys = greys

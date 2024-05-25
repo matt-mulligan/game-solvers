@@ -5,7 +5,7 @@ Logic to be kept to a minimum in this module and call out to other modules.
 
 from pyapp.app import CliApplication, argument
 
-from game_solvers.games.wordle import Wordle
+from game_solvers.games.wordle import WordleSolver
 
 app = CliApplication(
     description="Matt's Game Solver",
@@ -20,7 +20,7 @@ class WordleCLI:
     """Group of CLI commands that help solve wordle problems."""
 
     group = app.create_command_group(
-        "wordle", help_text="Wordle solvers and helper functions"
+        "wordle", help_text="WordleSolver solvers and helper functions"
     )
 
     # Input Parsers
@@ -167,4 +167,4 @@ class WordleCLI:
         yellows = WordleCLI.parse_yellow(yellow_letters)
         greys = WordleCLI.parse_grey(grey_letters)
 
-        Wordle(greens, yellows, greys).solutions()
+        WordleSolver(greens, yellows, greys).solutions()
