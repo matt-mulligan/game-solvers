@@ -17,11 +17,28 @@ class WordleSolver:
         self.yellows: list[tuple[str, list[int]]] = yellows
         self.greys: list[str] = greys
         self.dictionary = self.prep_words()
+        self.distribution = self.calculate_distribution(self.dictionary)
 
     @staticmethod
     def prep_words() -> list[str]:
-        """Load wordle game words from resources. Set all to capitals."""
+        """Load wordle game words from resources. Set all to capitals.
+
+        :return: list of five-letter words, all in upper case.
+        """
         return [word.upper() for word in read_data_resource("words_alpha_five_letters.txt")[0]]
+
+    @staticmethod
+    def calculate_distribution(words: list[str]) -> dict[str, int]:
+        """Calculate distribution of letters for the given words.
+
+        :return: dictionary containing all letters and their occurrence count in given words
+        """
+        distribution = {letter: 0 for letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ"}
+        for word in words:
+            for letter in word:
+                distribution[letter] += 1
+
+        return distribution
 
     def solutions(self) -> None:
         """Attempt to solve wordle game."""
@@ -31,6 +48,7 @@ class WordleSolver:
         """Check given word against the known letter information.
 
         :param word: the word to check
+        :return: True if word is valid, False otherwise
         """
         # rule out any words that do not have the green letters in the known position
         # note index access is zero-index and user input is one-index, hence the `-1`
@@ -49,3 +67,13 @@ class WordleSolver:
             return False
 
         return True
+
+    @staticmethod
+    def score_word(word: str, distribution: dict[str, int]) -> int:
+        """Score given word based on distribution of letters provided.
+
+        :param word: the word to score
+        :param distribution: dictionary containing all letters and their occurrence count
+        :return: total score of the word
+        """
+        return sum([distribution.get(letter, 0) for letter in word])
