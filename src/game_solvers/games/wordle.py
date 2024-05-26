@@ -2,7 +2,7 @@
 
 import logging
 
-from ..common.reporting import report_wordle_solutions
+from ..common.report import report_wordle_solutions
 from ..common.resources import read_data_resource
 
 logger = logging.getLogger("WordleSolver")
