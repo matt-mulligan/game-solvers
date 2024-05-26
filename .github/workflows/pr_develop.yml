@@ -35,7 +35,7 @@ jobs:
         run: poetry run ruff formatter
 
       - name: Run MyPy Checks
-        run: poetry run mypy
+        run: poetry run mypy ./src
 
       - name: Run Unit Tests
         run: poetry run nox -s unit-tests
