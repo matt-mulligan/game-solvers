@@ -1,3 +1,4 @@
+import csv
 from unittest.mock import patch
 
 from game_solvers.games.wordle import WordleSolver
@@ -29,6 +30,14 @@ class TestWordleSolver:
     def solver_full(self):
         """Solver setup with two green letters and nothing else"""
         return WordleSolver([("A", 3), ("D", 5)], [("Y", [4, 5])], ["Z", "N", "C", "H"])
+
+    @fixture
+    def cutdown_dictionary(self, data_fixture_path) -> list[str]:
+        """Cutdown Dictionary for Wordle Solver"""
+        cutdown_path = data_fixture_path / "cutdown_dictionary.csv"
+
+        with open(cutdown_path) as f_open:
+            return list(csv.reader(f_open, delimiter=","))[0]
 
     @patch("game_solvers.games.wordle.WordleSolver.calculate_distribution")
     @patch("game_solvers.games.wordle.WordleSolver.prep_words")
@@ -153,13 +162,7 @@ class TestWordleSolver:
 
     @mark.parametrize(
         "word, valid_state",
-        [
-            ("ABAMA", False),
-            ("AMPLY", True),
-            ("HEIRS", False),
-            ("MAYER", True),
-            ("SPEND", False),
-        ],
+        [("ABAMA", False), ("AMPLY", True), ("HEIRS", False), ("MAYER", True), ("SPEND", False), ("MYMER", False)],
     )
     def test_when_valid_word_and_yellow_info_then_words_correctly_checked(self, word, valid_state, solver_yellows):
         assert solver_yellows.valid_word(word) is valid_state
@@ -191,9 +194,22 @@ class TestWordleSolver:
         assert solver_full.valid_word(word) is valid_state
 
     @mark.parametrize(
+        "word, valid_state",
+        [("GYMEL", False), ("BEVEL", True), ("EXPEL", True)],
+    )
+    def test_when_valid_word_and_letter_in_both_green_and_yellow_then_correct_words_returned(self, word, valid_state):
+        solver = WordleSolver(
+            greens=[("E", 4), ("L", 5)],
+            yellows=[("E", [3])],
+            greys=["A", "R", "O", "S", "I", "N", "T", "C", "U", "D", "W", "H"],
+        )
+
+        assert solver.valid_word(word) is valid_state
+
+    @mark.parametrize(
         "word, expected",
         [
-            ("ABAMA", 29763),
+            ("ABAMA", 19271),
             ("PLAUD", 21113),
             ("HEIRS", 26834),
             ("STAND", 25976),
@@ -203,3 +219,141 @@ class TestWordleSolver:
     def test_when_score_word_then_correct_scores_produced(self, word, expected, solver_empty):
         actual = solver_empty.score_word(word, solver_empty.distribution)
         assert actual == expected
+
+    @mark.parametrize(
+        "greens, yellows, greys, scored, no_repeat, new_char",
+        [
+            (
+                [],
+                [],
+                [],
+                [
+                    ("RAISE", 32943),
+                    ("LASER", 32123),
+                    ("SNARE", 31920),
+                    ("SLATE", 31168),
+                    ("STALE", 31168),
+                    ("TEASE", 30822),
+                    ("SCARE", 30620),
+                    ("ASIDE", 30612),
+                    ("IRATE", 30595),
+                    ("SMEAR", 30370),
+                ],
+                [
+                    ("RAISE", 32943),
+                    ("LASER", 32123),
+                    ("SNARE", 31920),
+                    ("SLATE", 31168),
+                    ("STALE", 31168),
+                    ("SCARE", 30620),
+                    ("ASIDE", 30612),
+                    ("IRATE", 30595),
+                    ("SMEAR", 30370),
+                    ("SAUTE", 30282),
+                ],
+                [
+                    ("RAISE", 32943),
+                    ("LASER", 32123),
+                    ("SNARE", 31920),
+                    ("SLATE", 31168),
+                    ("STALE", 31168),
+                    ("TEASE", 30822),
+                    ("SCARE", 30620),
+                    ("ASIDE", 30612),
+                    ("IRATE", 30595),
+                    ("SMEAR", 30370),
+                ],
+            ),
+            (
+                [("E", 3), ("Y", 5)],
+                [],
+                [],
+                [
+                    ("LEERY", 23616),
+                    ("SEEDY", 23575),
+                    ("PIETY", 21879),
+                    ("NEEDY", 21082),
+                    ("EVERY", 20247),
+                    ("QUERY", 18968),
+                    ("BEEFY", 17553),
+                ],
+                [
+                    ("PIETY", 21879),
+                    ("QUERY", 18968),
+                ],
+                [
+                    ("SOLAR", 29540),
+                    ("STAIR", 29330),
+                    ("SNARL", 28365),
+                    ("SNAIL", 28288),
+                    ("SAINT", 28230),
+                    ("RATIO", 28012),
+                    ("AORTA", 27141),
+                    ("ASCOT", 27082),
+                    ("COAST", 27082),
+                    ("STAID", 26999),
+                ],
+            ),
+            (
+                [("E", 3)],
+                [("E", [5]), ("N", [2])],
+                [],
+                [("GREEN", 22862), ("NEEDY", 21082), ("QUEEN", 19247)],
+                [],
+                [
+                    ("SOLAR", 29540),
+                    ("STAIR", 29330),
+                    ("RATIO", 28012),
+                    ("AORTA", 27141),
+                    ("ASCOT", 27082),
+                    ("COAST", 27082),
+                    ("STAID", 26999),
+                    ("TIARA", 26989),
+                    ("SMART", 26757),
+                    ("SALSA", 26641),
+                ],
+            ),
+            (
+                [("A", 3)],
+                [("N", [2])],
+                ["S", "R", "U", "T", "W", "Y"],
+                [
+                    ("PIANO", 25022),
+                    ("AGAIN", 23671),
+                    ("CHAIN", 22532),
+                    ("BLAND", 21587),
+                    ("PLANK", 20726),
+                    ("FLANK", 19665),
+                ],
+                [
+                    ("PIANO", 25022),
+                    ("CHAIN", 22532),
+                    ("BLAND", 21587),
+                    ("PLANK", 20726),
+                    ("FLANK", 19665),
+                ],
+                [
+                    ("ELOPE", 23468),
+                    ("OLIVE", 23213),
+                    ("BELIE", 23107),
+                    ("BIOME", 22672),
+                    ("MODEL", 22575),
+                    ("IMPEL", 21909),
+                    ("GLIDE", 21900),
+                    ("GOLEM", 21733),
+                    ("VOICE", 21710),
+                    ("HELLO", 21676),
+                ],
+            ),
+        ],
+    )
+    @patch("game_solvers.games.wordle.report_wordle_solutions")
+    def test_when_solution_then_correct_solutions_passed_to_reporter(
+        self, report_wordle_solutions, greens, yellows, greys, scored, no_repeat, new_char, cutdown_dictionary
+    ):
+        solver = WordleSolver(greens, yellows, greys)
+        solver.dictionary = cutdown_dictionary
+
+        solver.solutions()
+
+        report_wordle_solutions.assert_called_once_with(greens, yellows, greys, scored, no_repeat, new_char)
