@@ -19,9 +19,7 @@ WORDLE_POS_DIGITS = "12345"
 class WordleCLI:
     """Group of CLI commands that help solve wordle problems."""
 
-    group = app.create_command_group(
-        "wordle", help_text="WordleSolver solvers and helper functions"
-    )
+    group = app.create_command_group("wordle", help_text="WordleSolver solvers and helper functions")
 
     # Input Parsers
     @staticmethod
@@ -106,16 +104,10 @@ class WordleCLI:
         greys = []
         for split in input_value.split(","):
             if len(split) > 1:
-                raise ValueError(
-                    f"Each input for grey letters must a single letter. "
-                    f"Input {split} is invalid."
-                )
+                raise ValueError(f"Each input for grey letters must a single letter. " f"Input {split} is invalid.")
 
             if split.upper() not in LETTERS:
-                raise ValueError(
-                    f"Each input for grey letters must a single letter. "
-                    f"Input {split} is invalid."
-                )
+                raise ValueError(f"Each input for grey letters must a single letter. " f"Input {split} is invalid.")
 
             greys.append(split.upper())
 
@@ -123,12 +115,7 @@ class WordleCLI:
 
     # Commands
     @staticmethod
-    @group.command(
-        help_text=(
-            "Given the current state of a wordle game, "
-            "provide the five best solutions"
-        )
-    )
+    @group.command(help_text=("Given the current state of a wordle game, " "provide the five best solutions"))
     def solutions(
         *,
         green_letters: str = argument(
