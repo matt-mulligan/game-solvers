@@ -6,7 +6,7 @@ on:
       - 'feature/**'
       
 jobs:
-  pre-checks-develop:
+  push-checks-feature:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
